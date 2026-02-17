@@ -1,30 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
 import { Clock, Code, FlaskConical } from "lucide-react"
+import { useStats } from "@/lib/useStats"
 
 export function StatsCounter() {
 
-  const [stats, setStats] = useState<any>(null)
+  const stats = useStats()
 
-  useEffect(() => {
-    loadStats()
-  }, [])
-
-  async function loadStats() {
-
-    const { data } = await supabase
-      .from("stats")
-      .select("*")
-      .single()
-
-    setStats(data)
-  }
-
-  if (!stats) {
-    return <div className="text-green-400 p-10">Loading stats...</div>
-  }
+  if (!stats) return null
 
   const items = [
     {
@@ -46,32 +29,27 @@ export function StatsCounter() {
 
   return (
 
-    <section className="py-20">
+    <div className="grid grid-cols-3 gap-6 p-6">
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {items.map((item, index) => (
 
-        {items.map((item, index) => (
+        <div key={index}
+          className="border border-green-500 p-6 text-center">
 
-          <div key={index}
-            className="bg-black border border-green-500 p-6 text-center">
+          <item.icon className="mx-auto text-green-400 mb-2" />
 
-            <item.icon className="mx-auto mb-4 text-green-400" />
-
-            <div className="text-4xl text-green-400">
-              {item.value}
-            </div>
-
-            <div className="text-green-300">
-              {item.label}
-            </div>
-
+          <div className="text-3xl text-green-400">
+            {item.value}
           </div>
 
-        ))}
+          <div className="text-green-300 text-sm">
+            {item.label}
+          </div>
 
-      </div>
+        </div>
 
-    </section>
+      ))}
 
+    </div>
   )
 }
