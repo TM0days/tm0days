@@ -8,7 +8,28 @@ export function useStats() {
     const [stats, setStats] = useState<any>(null)
 
     useEffect(() => {
+
         loadStats()
+
+        const channel = supabase
+            .channel("stats-realtime")
+            .on(
+                "postgres_changes",
+                {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "stats",
+                },
+                (payload) => {
+                    setStats(payload.new)
+                }
+            )
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
+
     }, [])
 
     async function loadStats() {
