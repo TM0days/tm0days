@@ -4,16 +4,12 @@ import { Clock, Code, FlaskConical, Plus } from "lucide-react"
 import { useStats } from "@/lib/useStats"
 import { supabase } from "@/lib/supabase"
 import { AnimatedCounter } from "./animated-counter"
-import { AchievementPopup } from "./achievement-popup"
 import { useState } from "react"
-import { checkAchievements } from "@/lib/achievementEngine"
 
 
 export function StatsCounter() {
 
   const stats = useStats()
-
-  const [achievement, setAchievement] = useState("")
 
   if (!stats) return null
 
@@ -43,17 +39,6 @@ export function StatsCounter() {
       })
       .eq("id", stats.id)
 
-    if (newLevel > oldLevel) {
-      setAchievement("LEVEL UP! Level " + newLevel)
-    }
-    const unlocked =
-      await checkAchievements(newStats)
-
-
-    if (unlocked) {
-      setAchievement(unlocked.name)
-      window.dispatchEvent(new Event("achievement-unlocked"))
-    }
 
   }
 
@@ -121,10 +106,6 @@ export function StatsCounter() {
 
       </div>
 
-      <AchievementPopup
-        show={achievement}
-        text={achievement}
-      />
 
     </>
   )
