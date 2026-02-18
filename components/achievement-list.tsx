@@ -7,6 +7,7 @@ import { Zap } from "lucide-react"
 export function AchievementList() {
 
     const [achievements, setAchievements] = useState<any[]>([])
+    const [unlockedIds, setUnlockedIds] = useState<string[]>([])
 
     useEffect(() => {
         load()
@@ -14,43 +15,57 @@ export function AchievementList() {
 
     async function load() {
 
-        const { data } =
+        // هات كل achievements
+        const { data: achievementsData } =
             await supabase
                 .from("achievements")
                 .select("*")
-                .order("requirement")
 
-        setAchievements(data || [])
+        // هات الإنجازات اللي اتفتحت
+        const { data: unlockedData } =
+            await supabase
+                .from("user_achievements")
+                .select("achievement_id")
+
+        setAchievements(achievementsData || [])
+
+        if (unlockedData) {
+            setUnlockedIds(unlockedData.map(a => a.achievement_id))
+        }
     }
 
     return (
 
         <div className="grid grid-cols-2 gap-3">
 
-            {achievements.map(a => (
+            {achievements.map(a => {
 
-                <div
-                    key={a.id}
-                    className={`
-            border p-4 rounded
-            ${a.unlocked
-                            ? "border-green-500 text-green-400"
-                            : "border-gray-700 text-gray-500"}
-          `}>
+                const isUnlocked = unlockedIds.includes(a.id)
 
-                    <Zap size={16} />
+                return (
+                    <div
+                        key={a.id}
+                        className={`
+              border p-4 rounded transition-all duration-300
+              ${isUnlocked
+                                ? "border-green-500 text-green-400 bg-green-900/20"
+                                : "border-gray-700 text-gray-500 opacity-40"}
+            `}>
 
-                    <div>{a.name}</div>
+                        <Zap size={16} className={isUnlocked ? "text-green-400" : "text-gray-600"} />
 
-                    <div className="text-xs">
-                        {a.description}
+                        <div className="font-semibold">
+                            {a.name}
+                        </div>
+
+                        <div className="text-xs">
+                            {a.description}
+                        </div>
+
                     </div>
-
-                </div>
-
-            ))}
+                )
+            })}
 
         </div>
-
     )
 }
