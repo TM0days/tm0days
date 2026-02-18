@@ -50,10 +50,16 @@ export function AchievementList() {
                     return aVal - bVal
                 })
 
-        return categoryAchievements.find(
-            a => !unlockedIds.includes(a.id)
-        )
+        // عدد المنجز فعليًا
+        const completedCount =
+            categoryAchievements.filter(a =>
+                unlockedIds.includes(a.id)
+            ).length
+
+        // نرجع اللي بعد آخر واحد اتفتح
+        return categoryAchievements[completedCount] || null
     }
+
 
     const exploitCurrent = getCurrentAchievement("exploit")
     const studyCurrent = getCurrentAchievement("study")
