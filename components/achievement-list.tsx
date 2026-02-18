@@ -7,7 +7,7 @@ import { Zap } from "lucide-react"
 export function AchievementList() {
 
     const [achievements, setAchievements] = useState<any[]>([])
-    const [unlockedIds, setUnlockedIds] = useState<string[]>([])
+    const [unlockedKeys, setUnlockedKeys] = useState<string[]>([])
 
     useEffect(() => {
         load()
@@ -25,22 +25,31 @@ export function AchievementList() {
 
     async function load() {
 
+        // هات كل achievements
         const { data: achievementsData } =
             await supabase
                 .from("achievements")
                 .select("*")
 
+        // هات المفعلين مع join على achievements
         const { data: unlockedData } =
             await supabase
                 .from("user_achievements")
-                .select("achievement_id")
+                .select(`
+          achievement_id,
+          achievements (
+            key
+          )
+        `)
 
         setAchievements(achievementsData || [])
-        setUnlockedIds(unlockedData?.map(a => a.achievement_id) || [])
+
+        // هنا بناخد key مش id
+        setUnlockedKeys(
+            unlockedData?.map((a: any) => a.achievements.key) || []
+        )
     }
 
-
-    // 👇 نجيب الإنجاز الحالي لكل category
     function getCurrentAchievement(category: string) {
 
         const categoryAchievements =
@@ -52,7 +61,10 @@ export function AchievementList() {
                     return aVal - bVal
                 })
 
-        return categoryAchievements.find(a => !unlockedIds.includes(a.id))
+        // نرجع أول واحد لسه مش متفتح
+        return categoryAchievements.find(
+            a => !unlockedKeys.includes(a.key)
+        )
     }
 
     const exploitCurrent = getCurrentAchievement("exploit")
@@ -64,7 +76,6 @@ export function AchievementList() {
             .filter(Boolean)
 
     return (
-
         <div className="grid grid-cols-2 gap-3">
 
             {currentAchievements.map(a => (
