@@ -30,7 +30,7 @@ export function AchievementList() {
     }
 
     return (
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-8 gap-8">
 
             {achievements.map(a => {
 
