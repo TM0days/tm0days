@@ -1,42 +1,69 @@
 import { supabase } from "./supabase"
 
-export async function checkAchievements(userId: string, stats: any) {
+export async function checkAchievements(stats: any) {
 
-    const { data: achievements } =
+    console.log("Stats received:", stats)
+
+    const { data: achievements, error } =
         await supabase.from("achievements").select("*")
 
-    if (!achievements) return null
+    if (error) {
+        console.log("Error loading achievements:", error)
+        return null
+    }
+
+    console.log("Achievements:", achievements)
 
     for (const achievement of achievements) {
 
-        let value = 0
+        const [type, valueStr] = achievement.key.split("_")
+        const requirement = parseInt(valueStr)
 
-        if (achievement.category === "study")
-            value = stats.study_hours
+        let currentValue = 0
 
-        if (achievement.category === "exploit")
-            value = stats.exploits_written
+        if (type === "study")
+            currentValue = stats.study_hours
 
-        if (achievement.category === "level")
-            value = stats.level
+        if (type === "exploit")
+            currentValue = stats.exploits_written
 
-        if (value >= achievement.requirement) {
+        if (type === "level")
+            currentValue = stats.level
 
-            // نشوف لو متسجل قبل كده
-            const { data: existing } = await supabase
-                .from("user_achievements")
-                .select("id")
-                .eq("user_id", userId)
-                .eq("achievement_id", achievement.id)
-                .single()
+        console.log("Checking:", achievement.key)
+        console.log("Current:", currentValue)
+        console.log("Required:", requirement)
 
-            if (!existing) {
+        if (currentValue >= requirement) {
+
+            console.log("Condition passed!")
+
+            const { data: existing, error: checkError } =
                 await supabase
                     .from("user_achievements")
-                    .insert({
-                        user_id: userId,
-                        achievement_id: achievement.id
-                    })
+                    .select("id")
+                    .eq("achievement_id", achievement.id)
+
+            if (checkError) {
+                console.log("Check existing error:", checkError)
+            }
+
+            console.log("Existing:", existing)
+
+            if (!existing || existing.length === 0) {
+
+                const { error: insertError } =
+                    await supabase
+                        .from("user_achievements")
+                        .insert({
+                            achievement_id: achievement.id
+                        })
+
+                if (insertError) {
+                    console.log("Insert error:", insertError)
+                } else {
+                    console.log("Inserted successfully!")
+                }
 
                 return achievement
             }
