@@ -65,7 +65,11 @@ export async function checkAchievements(stats: any) {
                     console.log("Inserted successfully!")
                 }
 
-                return achievement
+                return {
+                    ...achievement,
+                    unlocked: true
+                }
+
             }
         }
     }

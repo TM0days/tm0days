@@ -52,7 +52,9 @@ export function StatsCounter() {
 
     if (unlocked) {
       setAchievement(unlocked.name)
+      window.dispatchEvent(new Event("achievement-unlocked"))
     }
+
   }
 
 

@@ -11,6 +11,16 @@ export function AchievementList() {
 
     useEffect(() => {
         load()
+
+        function handleUnlock() {
+            load()
+        }
+
+        window.addEventListener("achievement-unlocked", handleUnlock)
+
+        return () => {
+            window.removeEventListener("achievement-unlocked", handleUnlock)
+        }
     }, [])
 
     async function load() {
@@ -28,6 +38,7 @@ export function AchievementList() {
         setAchievements(achievementsData || [])
         setUnlockedIds(unlockedData?.map(a => a.achievement_id) || [])
     }
+
 
     // 👇 نجيب الإنجاز الحالي لكل category
     function getCurrentAchievement(category: string) {
