@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import { Progress } from "@/components/ui/progress"
 import { Zap, Star, TrendingUp } from "lucide-react"
 import { useStats } from "@/lib/useStats"
+import { AchievementList } from "./achievement-list"
 
 export function LevelSystem() {
 
@@ -144,10 +145,7 @@ export function LevelSystem() {
 
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
 
-            <Achievement name="First Step" desc="Start your journey" />
-            <Achievement name="Explorer" desc="Study 10 hours" />
-            <Achievement name="Exploit Writer" desc="Write first exploit" />
-            <Achievement name="Elite Path" desc="Reach Level 10" />
+            <AchievementList />
 
           </div>
 

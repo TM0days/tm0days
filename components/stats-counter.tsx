@@ -5,11 +5,15 @@ import { useStats } from "@/lib/useStats"
 import { supabase } from "@/lib/supabase"
 import { AnimatedCounter } from "./animated-counter"
 import { useState } from "react"
+import { checkAchievements } from "@/lib/achievementEngine"
+
+
 
 
 export function StatsCounter() {
 
   const stats = useStats()
+  const [achievement, setAchievement] = useState<string | null>(null)
 
   if (!stats) return null
 
@@ -30,17 +34,25 @@ export function StatsCounter() {
 
     const newLevel = Math.floor(newXP / 1000) + 1
 
+    newStats.xp = newXP
+    newStats.level = newLevel
+
     await supabase
       .from("stats")
-      .update({
-        ...newStats,
-        xp: newXP,
-        level: newLevel
-      })
+      .update(newStats)
       .eq("id", stats.id)
 
+    // 🔥 هنا بقى نعمل check
+    const unlocked = await checkAchievements(newStats)
 
+    if (unlocked) {
+      setAchievement(unlocked.name)
+
+      // عشان AchievementList يتحدث
+      window.dispatchEvent(new Event("achievement-unlocked"))
+    }
   }
+
 
 
 
@@ -105,7 +117,6 @@ export function StatsCounter() {
         ))}
 
       </div>
-
 
     </>
   )
