@@ -46,10 +46,11 @@ export function StatsCounter() {
     if (newLevel > oldLevel) {
       setAchievement("LEVEL UP! Level " + newLevel)
     }
-    const unlocked = await checkAchievements(newStats)
+    const achievement = await checkAchievements(stats.user_id, newStats)
 
-    if (unlocked) {
-      setAchievement(unlocked.name)
+
+    if (achievement) {
+      setAchievement(achievement.name)
     }
   }
 

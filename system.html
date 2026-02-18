@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TM0days System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    background:#0b0f0c;
+    color:#00ff88;
+    font-family:'Orbitron', sans-serif;
+}
+
+.container{
+    width:90%;
+    margin:40px auto;
+}
+
+.topbar{
+    border:1px solid #00ff88;
+    padding:15px;
+    box-shadow:0 0 15px rgba(0,255,136,0.4);
+    margin-bottom:30px;
+}
+
+.progress-bar{
+    width:100%;
+    height:20px;
+    background:#111;
+    border:1px solid #00ff88;
+    margin-top:10px;
+}
+
+.progress{
+    height:100%;
+    background:#00ff88;
+    width:0%;
+    transition:0.5s;
+}
+
+button{
+    background:black;
+    border:1px solid #00ff88;
+    color:#00ff88;
+    padding:10px 20px;
+    margin:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    box-shadow:0 0 10px #00ff88;
+    transform:translateY(-2px);
+}
+
+.achievements{
+    margin-top:30px;
+    border:1px solid #00ff88;
+    padding:15px;
+}
+
+.badge{
+    padding:10px;
+    margin:5px 0;
+    border:1px solid #00ff88;
+}
+
+.locked{
+    opacity:0.3;
+}
+
+.notification{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:black;
+    border:1px solid #00ff88;
+    padding:15px;
+    box-shadow:0 0 20px rgba(0,255,136,0.7);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="topbar">
+<div id="stats"></div>
+<div class="progress-bar">
+<div class="progress" id="progress"></div>
+</div>
+</div>
+
+<h3>Deploy Mission</h3>
+
+<button onclick="addXP(200)">EASY (+200 XP)</button>
+<button onclick="addXP(400)">MEDIUM (+400 XP)</button>
+<button onclick="addXP(800)">HARD (+800 XP)</button>
+<button onclick="addXP(1500)">INSANE (+1500 XP)</button>
+
+<div class="achievements">
+<h3>Achievements</h3>
+<div id="achievementList"></div>
+</div>
+
+</div>
+
+<script>
+
+let level = 1;
+let currentXP = 0;
+
+function xpRequired(lvl){
+    return Math.floor(500 * Math.pow(lvl,1.5));
+}
+
+function getRank(lvl){
+    if(lvl <=3) return "C";
+    if(lvl <=6) return "B";
+    if(lvl <=10) return "A";
+    if(lvl <=15) return "S";
+    return "SS";
+}
+
+let achievements = [
+    {id:1, title:"Reach Level 3", condition:() => level >=3, unlocked:false},
+    {id:2, title:"Reach Level 5", condition:() => level >=5, unlocked:false},
+    {id:3, title:"Reach Level 10", condition:() => level >=10, unlocked:false},
+    {id:4, title:"Reach Rank B", condition:() => getRank(level) === "B", unlocked:false},
+    {id:5, title:"Reach Rank A", condition:() => getRank(level) === "A", unlocked:false},
+    {id:6, title:"Reach Rank S", condition:() => getRank(level) === "S", unlocked:false},
+];
+
+function save(){
+    localStorage.setItem("tm0days_level", level);
+    localStorage.setItem("tm0days_xp", currentXP);
+    localStorage.setItem("tm0days_achievements", JSON.stringify(achievements));
+}
+
+function load(){
+    if(localStorage.getItem("tm0days_level")){
+        level = parseInt(localStorage.getItem("tm0days_level"));
+        currentXP = parseInt(localStorage.getItem("tm0days_xp"));
+        achievements = JSON.parse(localStorage.getItem("tm0days_achievements"));
+    }
+}
+
+function showNotification(text){
+    let notif = document.createElement("div");
+    notif.className="notification";
+    notif.innerText = text;
+    document.body.appendChild(notif);
+    setTimeout(()=>notif.remove(),3000);
+}
+
+function checkAchievements(){
+    achievements.forEach(a=>{
+        if(!a.unlocked && a.condition()){
+            a.unlocked = true;
+            showNotification("Achievement Unlocked: " + a.title);
+        }
+    });
+}
+
+function renderAchievements(){
+    let list = document.getElementById("achievementList");
+    list.innerHTML="";
+    achievements.forEach(a=>{
+        let div = document.createElement("div");
+        div.className="badge " + (a.unlocked ? "" : "locked");
+        div.innerText = a.title + (a.unlocked ? " ✓" : " 🔒");
+        list.appendChild(div);
+    });
+}
+
+function updateUI(){
+    let required = xpRequired(level);
+    let percent = (currentXP / required) * 100;
+
+    document.getElementById("stats").innerHTML =
+        "TM0days // LVL " + level +
+        " // RANK " + getRank(level) +
+        "<br>XP: " + currentXP + " / " + required;
+
+    document.getElementById("progress").style.width = percent + "%";
+
+    renderAchievements();
+    save();
+}
+
+function addXP(amount){
+    currentXP += amount;
+
+    while(currentXP >= xpRequired(level)){
+        currentXP -= xpRequired(level);
+        level++;
+        showNotification("LEVEL UP! Now Level " + level);
+    }
+
+    checkAchievements();
+    updateUI();
+}
+
+load();
+updateUI();
+
+</script>
+
+</body>
+</html>
