@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase"
 import { AnimatedCounter } from "./animated-counter"
 import { AchievementPopup } from "./achievement-popup"
 import { useState } from "react"
+import { checkAchievements } from "@/lib/achievementEngine"
+
 
 export function StatsCounter() {
 
@@ -44,8 +46,15 @@ export function StatsCounter() {
     if (newLevel > oldLevel) {
       setAchievement("LEVEL UP! Level " + newLevel)
     }
+    const unlocked = await checkAchievements(newStats)
 
+    if (unlocked) {
+      setAchievement(unlocked.name)
+    }
   }
+
+
+
 
   const items = [
 

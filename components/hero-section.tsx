@@ -4,8 +4,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Shield, ArrowRight } from "lucide-react"
+import { useRank } from "@/lib/useRank"
 
 export function HeroSection() {
+  const rank = useRank()
   return (
     <section className="relative overflow-hidden py-20 md:py-32">
       {/* Background grid */}
@@ -43,12 +45,21 @@ export function HeroSection() {
         <h1 className="mb-3 font-mono text-4xl font-bold tracking-tight text-foreground md:text-6xl">
           <span className="text-glow text-primary">{"TM0days"}</span>
         </h1>
+        {rank && (
+
+          <div className="mt-2 text-green-400 font-mono">
+
+            {rank.badge} {rank.name}
+
+          </div>
+
+        )}
         <p className="mb-2 text-lg font-medium text-foreground md:text-xl">
-          Security Researcher
+          Android Security Researcher
         </p>
         <p className="mb-8 max-w-lg text-balance text-muted-foreground">
           Exploring the boundaries of digital security. Vulnerability research,
-          exploit development, and offensive security.
+          exploit development, offensive security, and Bug Hunter🪲.
         </p>
 
         {/* CTA */}

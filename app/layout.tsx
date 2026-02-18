@@ -19,8 +19,8 @@ const _geistMono = Geist_Mono({
 }) */
 
 export const metadata: Metadata = {
-  title: 'TM0days | Security Researcher',
-  description: 'Cybersecurity researcher, exploit developer, and security analyst. Exploring the boundaries of digital security.',
+  title: 'TM0days | Android Security Researcher',
+  description: 'Cybersecurity researcher, exploit developer, and AppSec Engineer. Exploring the boundaries of digital security.',
   icons: {
     icon: [
       {

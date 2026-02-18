@@ -3,6 +3,7 @@ import { StatsCounter } from "@/components/stats-counter"
 import { LevelSystem } from "@/components/level-system"
 import { BlogPreview } from "@/components/blog-preview"
 import { Footer } from "@/components/footer"
+import { MissionPanel } from "@/components/mission-panel"
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <HeroSection />
       <StatsCounter />
       <LevelSystem />
+      <MissionPanel />
       <BlogPreview />
       <Footer />
     </div>
