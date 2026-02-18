@@ -7,7 +7,7 @@ import { Zap } from "lucide-react"
 export function AchievementList() {
 
     const [achievements, setAchievements] = useState<any[]>([])
-    const [unlockedKeys, setUnlockedKeys] = useState<string[]>([])
+    const [unlockedIds, setUnlockedIds] = useState<string[]>([])
 
     useEffect(() => {
         load()
@@ -25,29 +25,18 @@ export function AchievementList() {
 
     async function load() {
 
-        // هات كل achievements
         const { data: achievementsData } =
             await supabase
                 .from("achievements")
                 .select("*")
 
-        // هات المفعلين مع join على achievements
         const { data: unlockedData } =
             await supabase
                 .from("user_achievements")
-                .select(`
-          achievement_id,
-          achievements (
-            key
-          )
-        `)
+                .select("achievement_id")
 
         setAchievements(achievementsData || [])
-
-        // هنا بناخد key مش id
-        setUnlockedKeys(
-            unlockedData?.map((a: any) => a.achievements.key) || []
-        )
+        setUnlockedIds(unlockedData?.map(a => a.achievement_id) || [])
     }
 
     function getCurrentAchievement(category: string) {
@@ -61,9 +50,8 @@ export function AchievementList() {
                     return aVal - bVal
                 })
 
-        // نرجع أول واحد لسه مش متفتح
         return categoryAchievements.find(
-            a => !unlockedKeys.includes(a.key)
+            a => !unlockedIds.includes(a.id)
         )
     }
 
