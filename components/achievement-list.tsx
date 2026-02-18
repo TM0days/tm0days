@@ -15,61 +15,66 @@ export function AchievementList() {
 
     async function load() {
 
-        // هات كل achievements
         const { data: achievementsData } =
             await supabase
                 .from("achievements")
                 .select("*")
 
-        // هات الإنجازات اللي اتفتحت
         const { data: unlockedData } =
             await supabase
                 .from("user_achievements")
                 .select("achievement_id")
 
         setAchievements(achievementsData || [])
-
-        if (unlockedData) {
-            setUnlockedIds(unlockedData.map(a => a.achievement_id))
-        }
+        setUnlockedIds(unlockedData?.map(a => a.achievement_id) || [])
     }
+
+    // 👇 نجيب الإنجاز الحالي لكل category
+    function getCurrentAchievement(category: string) {
+
+        const categoryAchievements =
+            achievements
+                .filter(a => a.key.startsWith(category + "_"))
+                .sort((a, b) => {
+                    const aVal = parseInt(a.key.split("_")[1])
+                    const bVal = parseInt(b.key.split("_")[1])
+                    return aVal - bVal
+                })
+
+        return categoryAchievements.find(a => !unlockedIds.includes(a.id))
+    }
+
+    const exploitCurrent = getCurrentAchievement("exploit")
+    const studyCurrent = getCurrentAchievement("study")
+    const levelCurrent = getCurrentAchievement("level")
+
+    const currentAchievements =
+        [exploitCurrent, studyCurrent, levelCurrent]
+            .filter(Boolean)
 
     return (
 
         <div className="grid grid-cols-2 gap-3">
 
-            {achievements.map(a => {
+            {currentAchievements.map(a => (
 
-                const isUnlocked = unlockedIds.includes(a.id)
+                <div
+                    key={a.id}
+                    className="border border-green-500 p-4 rounded transition">
 
-                return (
-                    <div
-                        key={a.id}
-                        className={`
-              border p-4 rounded transition-all duration-300
-              ${isUnlocked
-                                ? "border-green-500 text-green-400 bg-green-900/20"
-                                : "border-gray-700 text-gray-500 opacity-40"}
-            `}>
+                    <Zap size={16} className="text-green-400" />
 
-                        {isUnlocked ? (
-                            <span className="text-green-400 text-lg">✓</span>
-                        ) : (
-                            <Zap size={16} className="text-gray-600" />
-                        )}
-
-
-                        <div className="font-semibold">
-                            {a.name}
-                        </div>
-
-                        <div className="text-xs">
-                            {a.description}
-                        </div>
-
+                    <div className="font-semibold">
+                        {a.name}
                     </div>
-                )
-            })}
+
+                    <div className="text-xs">
+                        {a.description}
+                    </div>
+
+                </div>
+
+            ))}
 
         </div>
     )
