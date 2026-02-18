@@ -16,8 +16,10 @@ export function MissionPanel() {
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [xpReward, setXpReward] = useState(200)
     const [loading, setLoading] = useState(false)
 
+    // 🟢 Create Mission
     async function createMission() {
 
         if (!title) return
@@ -28,23 +30,69 @@ export function MissionPanel() {
         if (current) {
             await supabase
                 .from("missions")
-                .update({ status: "completed", progress: 100 })
+                .update({
+                    status: "completed",
+                    progress: 100,
+                    completed_at: new Date()
+                })
                 .eq("id", current.id)
         }
 
-        // أضف mission جديدة
         await supabase
             .from("missions")
             .insert({
                 title,
                 description,
                 progress: 0,
-                status: "active"
+                status: "active",
+                xp_reward: xpReward
             })
 
         setTitle("")
         setDescription("")
+        setXpReward(200)
         setLoading(false)
+
+        window.location.reload()
+    }
+
+    // 🟢 Complete Mission + Give XP
+    async function completeMission() {
+
+        if (!current) return
+
+        // 1️⃣ تحديث mission
+        await supabase
+            .from("missions")
+            .update({
+                status: "completed",
+                progress: 100,
+                completed_at: new Date()
+            })
+            .eq("id", current.id)
+
+        // 2️⃣ جلب stats
+        const { data: stats } =
+            await supabase
+                .from("stats")
+                .select("*")
+                .single()
+
+        if (!stats) return
+
+        // 3️⃣ إضافة XP
+        const newXP = stats.xp + (current.xp_reward || 0)
+
+        const newLevel =
+            Math.floor(newXP / 1000) + 1
+
+        await supabase
+            .from("stats")
+            .update({
+                xp: newXP,
+                level: newLevel
+            })
+            .eq("id", stats.id)
 
         window.location.reload()
     }
@@ -59,7 +107,7 @@ export function MissionPanel() {
 
             {current ? (
                 <>
-                    <div className="text-lg">
+                    <div className="text-lg font-semibold">
                         {current.title}
                     </div>
 
@@ -67,24 +115,32 @@ export function MissionPanel() {
                         {current.description}
                     </div>
 
-                    <div className="w-full bg-gray-800 h-3 mt-3">
+                    <div className="w-full bg-gray-800 h-3 mt-3 rounded">
                         <div
-                            className="bg-green-500 h-3"
+                            className="bg-green-500 h-3 rounded"
                             style={{ width: `${current.progress}%` }}
                         />
                     </div>
 
-                    <div className="text-sm mt-1">
+                    <div className="text-sm mt-2">
                         {current.progress}%
                     </div>
+
+                    <button
+                        onClick={completeMission}
+                        className="mt-4 px-4 py-2 border border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition rounded">
+
+                        Complete Mission (+{current.xp_reward} XP)
+
+                    </button>
                 </>
             ) : (
                 <div>No active mission</div>
             )}
 
-            {/* 🔥 Create Mission Form */}
+            {/* 🔥 Create Mission */}
 
-            <div className="mt-8 border-t border-gray-800 pt-6">
+            <div className="mt-10 border-t border-gray-800 pt-6">
 
                 <h3 className="text-green-400 mb-4">
                     Create New Mission
@@ -94,20 +150,28 @@ export function MissionPanel() {
                     placeholder="Mission Title"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400"
+                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400 rounded"
                 />
 
                 <textarea
                     placeholder="Mission Description"
                     value={description}
                     onChange={e => setDescription(e.target.value)}
-                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400"
+                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400 rounded"
+                />
+
+                <input
+                    type="number"
+                    placeholder="XP Reward"
+                    value={xpReward}
+                    onChange={e => setXpReward(Number(e.target.value))}
+                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400 rounded"
                 />
 
                 <button
                     onClick={createMission}
                     disabled={loading}
-                    className="px-4 py-2 border border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition">
+                    className="px-4 py-2 border border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition rounded">
 
                     Start Mission
 
@@ -117,7 +181,7 @@ export function MissionPanel() {
 
             {/* Mission History */}
 
-            <div className="mt-8">
+            <div className="mt-10">
 
                 <h3 className="text-green-400 mb-2">
                     Mission History
@@ -127,9 +191,9 @@ export function MissionPanel() {
 
                     <div
                         key={m.id}
-                        className="text-green-400 text-sm">
+                        className="text-green-400 text-sm mb-1">
 
-                        ✓ {m.title}
+                        ✓ {m.title} (+{m.xp_reward} XP)
 
                     </div>
 
