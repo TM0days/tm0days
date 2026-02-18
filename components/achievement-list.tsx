@@ -52,7 +52,12 @@ export function AchievementList() {
                                 : "border-gray-700 text-gray-500 opacity-40"}
             `}>
 
-                        <Zap size={16} className={isUnlocked ? "text-green-400" : "text-gray-600"} />
+                        {isUnlocked ? (
+                            <span className="text-green-400 text-lg">✓</span>
+                        ) : (
+                            <Zap size={16} className="text-gray-600" />
+                        )}
+
 
                         <div className="font-semibold">
                             {a.name}
