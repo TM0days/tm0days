@@ -91,17 +91,32 @@ export function StatsCounter() {
   return (
 
     <>
-      <div className="grid grid-cols-3 gap-6 p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
         {items.map((item, index) => (
 
           <div key={index}
-            className="border border-green-500 p-6 text-center hover:scale-105 transition">
+            className="
+group
+relative
+border border-green-700
+bg-black/40
+backdrop-blur-sm
+p-6
+rounded-xl
+text-center
+transition-all duration-300
+hover:border-green-400
+hover:shadow-[0_0_25px_rgba(0,255,0,0.25)]
+hover:-translate-y-1
+min-h-[200px]
+flex flex-col justify-between
+">
 
-            <item.icon className="mx-auto text-green-400 mb-2" />
+            <item.icon className="mx-auto text-green-400 mb-3 h-8 w-8 group-hover:scale-110 transition" />
 
-            <div className="text-4xl text-green-400 mb-2">
-
+            <div className="text-4xl font-bold text-green-300 mb-3">
+              <div className="h-[2px] w-12 mx-auto bg-green-500/50 mb-3" />
               <AnimatedCounter value={item.value} />
 
             </div>
@@ -112,7 +127,16 @@ export function StatsCounter() {
 
             <button
               onClick={() => updateStat(item.field)}
-              className="px-4 py-2 border border-green-500 hover:bg-green-500 hover:text-black transition rounded">
+              className="
+mt-4
+px-4 py-2
+border border-green-600
+text-green-400
+rounded-md
+hover:bg-green-500
+hover:text-black
+transition-all duration-300
+">
 
               <Plus size={16} />
 
