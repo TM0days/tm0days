@@ -106,36 +106,53 @@ export function MissionPanel() {
             </h2>
 
             {current ? (
-                <>
-                    <div className="text-lg font-semibold">
-                        {current.title}
+                <div className="border border-green-400 
+                  bg-green-950/30 
+                  shadow-[0_0_25px_rgba(0,255,0,0.3)]
+                  rounded-xl p-6 transition">
+
+                    <div className="flex justify-between items-center">
+                        <div className="text-xl font-bold text-green-400">
+                            🎯 {current.title}
+                        </div>
+
+                        <div className="text-sm text-green-500">
+                            +{current.xp_reward} XP
+                        </div>
                     </div>
 
-                    <div className="text-sm text-gray-400">
+                    <div className="text-gray-400 mt-2">
                         {current.description}
                     </div>
 
-                    <div className="w-full bg-gray-800 h-3 mt-3 rounded">
+                    {/* Progress Bar */}
+                    <div className="w-full bg-green-900/40 h-2 mt-4 rounded-full overflow-hidden">
                         <div
-                            className="bg-green-500 h-3 rounded"
+                            className="bg-green-400 h-2 transition-all duration-500"
                             style={{ width: `${current.progress}%` }}
                         />
                     </div>
 
-                    <div className="text-sm mt-2">
-                        {current.progress}%
+                    <div className="text-xs text-green-500 mt-2">
+                        {current.progress}% Completed
                     </div>
 
                     <button
                         onClick={completeMission}
-                        className="mt-4 px-4 py-2 border border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition rounded">
+                        className="mt-5 px-5 py-2 
+                 bg-green-500 text-black 
+                 font-semibold rounded 
+                 hover:scale-105 transition">
 
-                        Complete Mission (+{current.xp_reward} XP)
+                        Complete Mission
 
                     </button>
-                </>
+
+                </div>
             ) : (
-                <div>No active mission</div>
+                <div className="text-gray-500 italic">
+                    No active mission
+                </div>
             )}
 
             {/* 🔥 Create Mission */}
@@ -150,14 +167,22 @@ export function MissionPanel() {
                     placeholder="Mission Title"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400 rounded"
+                    className="w-full mb-3 p-3 
+           bg-green-950/20 
+           border border-green-900 
+           text-green-400 rounded-lg 
+           focus:outline-none focus:border-green-500 transition"
                 />
 
                 <textarea
                     placeholder="Mission Description"
                     value={description}
                     onChange={e => setDescription(e.target.value)}
-                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400 rounded"
+                    className="w-full mb-3 p-3 
+           bg-green-950/20 
+           border border-green-900 
+           text-green-400 rounded-lg 
+           focus:outline-none focus:border-green-500 transition"
                 />
 
                 <input
@@ -165,13 +190,21 @@ export function MissionPanel() {
                     placeholder="XP Reward"
                     value={xpReward}
                     onChange={e => setXpReward(Number(e.target.value))}
-                    className="w-full mb-3 p-2 bg-black border border-gray-700 text-green-400 rounded"
+                    className="w-full mb-3 p-3 
+           bg-green-950/20 
+           border border-green-900 
+           text-green-400 rounded-lg 
+           focus:outline-none focus:border-green-500 transition"
                 />
 
                 <button
                     onClick={createMission}
                     disabled={loading}
-                    className="px-4 py-2 border border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition rounded">
+                    className="px-5 py-2 
+           border border-green-500 
+           text-green-400 
+           hover:bg-green-500 hover:text-black 
+           transition rounded-lg">
 
                     Start Mission
 
@@ -191,9 +224,19 @@ export function MissionPanel() {
 
                     <div
                         key={m.id}
-                        className="text-green-400 text-sm mb-1">
+                        className="border border-green-900 
+             bg-green-950/20 
+             rounded-lg p-3 mb-3 
+             flex justify-between items-center
+             hover:border-green-500 transition">
 
-                        ✓ {m.title} (+{m.xp_reward} XP)
+                        <div className="text-green-400 text-sm">
+                            ✓ {m.title}
+                        </div>
+
+                        <div className="text-xs text-green-500">
+                            +{m.xp_reward} XP
+                        </div>
 
                     </div>
 
