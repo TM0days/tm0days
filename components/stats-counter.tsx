@@ -1,6 +1,6 @@
 "use client"
 
-import { Clock, Code, FlaskConical, Plus } from "lucide-react"
+import { BugIcon, Clock, Code, FlaskConical, Plus } from "lucide-react"
 import { useStats } from "@/lib/useStats"
 import { supabase } from "@/lib/supabase"
 import { AnimatedCounter } from "./animated-counter"
@@ -79,6 +79,12 @@ export function StatsCounter() {
       label: "Research Hours",
       field: "research_hours"
     },
+    {
+      icon: BugIcon,
+      value: stats.cves_found,
+      label: "CVEs Found",
+      field: "cves_found"
+    }
 
   ]
 
