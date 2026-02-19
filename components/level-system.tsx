@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Progress } from "@/components/ui/progress"
-import { Zap, Star, TrendingUp } from "lucide-react"
+import { Star, TrendingUp } from "lucide-react"
 import { useStats } from "@/lib/useStats"
 import { AchievementList } from "./achievement-list"
 
@@ -65,8 +65,10 @@ export function LevelSystem() {
           </h2>
         </div>
 
-        <div className="mx-auto max-w-3xl">
+        {/* 👇 ده نفس عرض الكارت */}
+        <div className="mx-auto max-w-3xl space-y-6">
 
+          {/* Level Card */}
           <div className="card-glow rounded-lg border border-border bg-card p-6 md:p-8">
 
             <div className="mb-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
@@ -141,45 +143,13 @@ export function LevelSystem() {
 
           </div>
 
-          {/* Achievements */}
-
-          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-
-            <AchievementList />
-
-          </div>
+          {/* 👇 Achievements بنفس العرض */}
+          <AchievementList />
 
         </div>
 
       </div>
 
     </section>
-  )
-}
-
-function Achievement({ name, desc }: { name: string, desc: string }) {
-
-  return (
-    <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
-
-      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10">
-
-        <Zap className="h-4 w-4 text-primary" />
-
-      </div>
-
-      <div>
-
-        <p className="text-sm font-medium">
-          {name}
-        </p>
-
-        <p className="text-xs text-muted-foreground">
-          {desc}
-        </p>
-
-      </div>
-
-    </div>
   )
 }
