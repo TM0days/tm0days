@@ -21,6 +21,7 @@ export function MissionPanel() {
     const [xpReward, setXpReward] = useState(200)
     const [loading, setLoading] = useState(false)
     const [xpGain, setXpGain] = useState<number | null>(null)
+    const [showLog, setShowLog] = useState(false)
 
     // 🎯 Create Mission
     async function createMission() {
@@ -241,31 +242,60 @@ export function MissionPanel() {
                 </button>
 
                 {/* Quest Log */}
+                {/* Quest Log Toggle */}
                 <div className="mt-12">
 
-                    <h3 className="text-green-400 mb-4">
-                        📜 Quest Log
-                    </h3>
+                    {/* Header */}
+                    <button
+                        onClick={() => setShowLog(!showLog)}
+                        className="w-full flex justify-between items-center
+               border border-green-800
+               rounded-lg p-3
+               hover:border-green-500
+               transition">
 
-                    {completed.map(m => (
+                        <span className="text-green-400 font-medium">
+                            📜 Quest Log
+                        </span>
 
-                        <div
-                            key={m.id}
-                            className="border border-green-800
-                       rounded-lg p-3 mb-3
-                       flex justify-between items-center">
+                        <span className="text-green-400 text-sm">
+                            {showLog ? "▲ Hide" : "▼ Show"}
+                        </span>
 
-                            <div className="text-green-400 text-sm">
-                                🏆 {m.title}
+                    </button>
+
+                    {/* Animated Content */}
+                    <div
+                        className={`
+      transition-all duration-500 overflow-hidden
+      ${showLog ? "max-h-[800px] opacity-100 mt-4" : "max-h-0 opacity-0"}
+    `}
+                    >
+
+                        {completed.map(m => (
+
+                            <div
+                                key={m.id}
+                                className="border border-green-800
+                   bg-black/40
+                   rounded-lg p-3 mb-3
+                   flex justify-between items-center
+                   hover:border-green-500
+                   transition">
+
+                                <div className="text-green-400 text-sm">
+                                    🏆 {m.title}
+                                </div>
+
+                                <div className="text-xs text-green-500">
+                                    +{m.xp_reward} XP
+                                </div>
+
                             </div>
 
-                            <div className="text-xs text-green-500">
-                                +{m.xp_reward} XP
-                            </div>
+                        ))}
 
-                        </div>
-
-                    ))}
+                    </div>
 
                 </div>
 
