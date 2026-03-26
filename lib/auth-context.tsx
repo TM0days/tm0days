@@ -16,6 +16,7 @@ const VALID_CREDENTIALS = {
   username: "TM0days",
   password: "admin",
 }
+const ADMIN_EMAIL = "esc4nor8@gmail.com"
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)

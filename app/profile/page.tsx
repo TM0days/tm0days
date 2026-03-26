@@ -50,9 +50,9 @@ const tools = [
 ]
 
 const certifications = [
-  { name: "OSCP", issuer: "Offensive Security", year: "2024" },
-  { name: "CRTP", issuer: "Pentester Academy", year: "2023" },
-  { name: "eWPTX", issuer: "eLearnSecurity", year: "2023" },
+  { name: "Soon", issuer: "-", year: "..." },
+  { name: "Soon", issuer: "-", year: "..." },
+  { name: "Soon", issuer: "-", year: "..." },
 ]
 
 export default function ProfilePage() {
@@ -78,20 +78,20 @@ export default function ProfilePage() {
               <span className="text-glow text-primary">{"TM0days"}</span>
             </h1>
             <p className="mb-3 text-lg font-medium text-foreground">
-              Security Researcher
+              Android Security Researcher
             </p>
             <div className="mb-4 flex flex-wrap justify-center gap-3 text-sm text-muted-foreground md:justify-start">
               <span className="flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5" />
-                Undisclosed
+                127.0.0.1
               </span>
               <span className="flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5" />
-                Active since 2020
+                Active since 2026
               </span>
               <span className="flex items-center gap-1.5">
                 <Shield className="h-3.5 w-3.5 text-primary" />
-                Level 42
+                Level 2
               </span>
             </div>
             <div className="flex justify-center gap-3 md:justify-start">
@@ -224,10 +224,10 @@ export default function ProfilePage() {
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {[
-              { label: "CVEs Found", value: "12" },
-              { label: "Bug Bounties", value: "38" },
-              { label: "Tools Built", value: "7" },
-              { label: "Talks Given", value: "5" },
+              { label: "CVEs Found", value: "0" },
+              { label: "Bug Bounties", value: "0" },
+              { label: "Tools Built", value: "0" },
+              { label: "Talks Given", value: "0" },
             ].map((item) => (
               <div key={item.label} className="text-center">
                 <p className="font-mono text-2xl font-bold text-foreground">
