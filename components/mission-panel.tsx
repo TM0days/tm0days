@@ -12,7 +12,8 @@ export function MissionPanel() {
     const missions = useMissions()
     const stats = useStats()
 
-    const { isAuthenticated } = useAuth()
+    const { isAuthenticated, username } = useAuth()
+    const isAdmin = isAuthenticated && username === "TM0days"
 
     const current =
         missions.find(m => m.status === "active")
@@ -199,7 +200,7 @@ export function MissionPanel() {
                         💤 No Active Quest
                     </div>
                 )}
-                {isAuthenticated && (
+                {isAdmin && (
                     <>
                         {/* Create Quest */}
                         <h3 className="text-green-400 mb-4">
