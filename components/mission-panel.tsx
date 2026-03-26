@@ -1,18 +1,18 @@
-"use client"
+
 
 import { useMissions } from "@/lib/useMissions"
 import { supabase } from "@/lib/supabase"
 import { useState } from "react"
 import { useStats } from "@/lib/useStats"
-import { useUser } from "@/lib/auth-context"
+import { useAuth } from "@/lib/auth-context"
+
 
 export function MissionPanel() {
 
     const missions = useMissions()
     const stats = useStats()
 
-    const user = useUser()
-    const isAdmin = user?.email === "esc4nor8@gmail.com"
+    const { isAuthenticated } = useAuth()
 
     const current =
         missions.find(m => m.status === "active")
@@ -199,7 +199,7 @@ export function MissionPanel() {
                         💤 No Active Quest
                     </div>
                 )}
-                {isAdmin && (
+                {isAuthenticated && (
                     <>
                         {/* Create Quest */}
                         <h3 className="text-green-400 mb-4">
