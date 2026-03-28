@@ -12,8 +12,9 @@ export function MissionPanel() {
     const missions = useMissions()
     const stats = useStats()
 
-    const { isAuthenticated, username } = useAuth()
-    const isAdmin = isAuthenticated && username === "TM0days"
+    const { username } = useAuth()
+
+    const isAdmin = username === "TM0days"
 
     const current =
         missions.find(m => m.status === "active")
