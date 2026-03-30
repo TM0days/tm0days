@@ -61,16 +61,16 @@ export default function BlogPage() {
         )}
 
         {/* Posts */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          {regularPosts.map(post => (
 
-            <div
-              onClick={() => {
-                console.log("CLICKED", post.slug)
-                window.location.href = `/blog/${post.slug}`
-              }}
-              className="
+        {regularPosts.map(post => (
+
+          <div
+            onClick={() => {
+              console.log("CLICKED", post.slug)
+              window.location.href = `/blog/${post.slug}`
+            }}
+            className="
     relative z-50
     border border-green-500/20
     p-4 rounded
@@ -78,13 +78,13 @@ export default function BlogPage() {
     hover:border-green-400
     transition
   "
-            > </div>
+          > </div>
 
-          ))}
-
-        </div>
+        ))}
 
       </div>
+
+
 
       <Footer />
 
