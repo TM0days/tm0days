@@ -61,33 +61,55 @@ export default function BlogPage() {
         )}
 
         {/* Posts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+          {regularPosts.map(post => (
 
-        {regularPosts.map(post => (
+            <div
+              key={post.id}
+              onClick={() => {
+                console.log("CLICKED", post.slug)
+                window.location.href = `/blog/${post.slug}`
+              }}
+              className="
+                relative z-50
+                border border-green-500/20
+                p-4 rounded
+                cursor-pointer
+                hover:border-green-400
+                transition
+              "
+            >
 
-          <div
-            onClick={() => {
-              console.log("CLICKED", post.slug)
-              window.location.href = `/blog/${post.slug}`
-            }}
-            className="
-    relative z-50
-    border border-green-500/20
-    p-4 rounded
-    cursor-pointer
-    hover:border-green-400
-    transition
-  "
-          > </div>
+              <h3 className="text-green-400 font-semibold">
+                {post.title}
+              </h3>
 
-        ))}
+              <p className="text-sm text-gray-400">
+                {post.excerpt}
+              </p>
+
+              <div className="flex gap-4 text-xs mt-2">
+
+                <span className="flex items-center gap-1">
+                  📅 {new Date(post.date).toDateString()}
+                </span>
+
+                <span className="flex items-center gap-1">
+                  ⏱️ {post.read_time}
+                </span>
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        <Footer />
 
       </div>
-
-
-
-      <Footer />
-
     </div>
   )
 }
