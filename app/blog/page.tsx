@@ -67,7 +67,14 @@ export default function BlogPage() {
 
             <Link key={post.id} href={`/blog/${post.slug}`}>
 
-              <div className="border p-4 rounded cursor-pointer hover:border-green-400 transition">
+              <div className="
+      border border-green-500/20 
+      p-4 rounded 
+      cursor-pointer 
+      hover:border-green-400 
+      hover:shadow-[0_0_15px_rgba(0,255,100,0.2)]
+      transition
+    ">
 
                 <h3 className="text-green-400 font-semibold">
                   {post.title}
