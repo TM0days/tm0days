@@ -70,7 +70,14 @@ export default function BlogPage() {
                 console.log("CLICKED", post.slug)
                 window.location.href = `/blog/${post.slug}`
               }}
-              className="border p-4 rounded cursor-pointer"
+              className="
+    relative z-50
+    border border-green-500/20
+    p-4 rounded
+    cursor-pointer
+    hover:border-green-400
+    transition
+  "
             > </div>
 
           ))}
