@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase"
 import { Badge } from "@/components/ui/badge"
 import { Footer } from "@/components/footer"
 import { Calendar, Clock } from "lucide-react"
+import Link from "next/link"
 
 export default function BlogPage() {
 
@@ -64,31 +65,35 @@ export default function BlogPage() {
 
           {regularPosts.map(post => (
 
-            <div key={post.id} className="border p-4 rounded">
+            <Link key={post.id} href={`/blog/${post.slug}`}>
 
-              <h3 className="text-green-400 font-semibold">
-                {post.title}
-              </h3>
+              <div className="border p-4 rounded cursor-pointer hover:border-green-400 transition">
 
-              <p className="text-sm text-gray-400">
-                {post.excerpt}
-              </p>
+                <h3 className="text-green-400 font-semibold">
+                  {post.title}
+                </h3>
 
-              <div className="flex gap-4 text-xs mt-2">
+                <p className="text-sm text-gray-400">
+                  {post.excerpt}
+                </p>
 
-                <span className="flex items-center gap-1">
-                  <Calendar size={12} />
-                  {new Date(post.date).toDateString()}
-                </span>
+                <div className="flex gap-4 text-xs mt-2">
 
-                <span className="flex items-center gap-1">
-                  <Clock size={12} />
-                  {post.read_time}
-                </span>
+                  <span className="flex items-center gap-1">
+                    <Calendar size={12} />
+                    {new Date(post.date).toDateString()}
+                  </span>
+
+                  <span className="flex items-center gap-1">
+                    <Clock size={12} />
+                    {post.read_time}
+                  </span>
+
+                </div>
 
               </div>
 
-            </div>
+            </Link>
 
           ))}
 
