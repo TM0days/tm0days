@@ -199,6 +199,7 @@ export function MissionPanel() {
                         💤 No Active Quest
                     </div>
                 )}
+
                 {/* Quest Log */}
                 {/* Quest Log Toggle */}
                 <div className="mt-12">
