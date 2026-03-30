@@ -91,7 +91,7 @@ export default function ProfilePage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Shield className="h-3.5 w-3.5 text-primary" />
-                Level 2
+                Level 1
               </span>
             </div>
             <div className="flex justify-center gap-3 md:justify-start">
