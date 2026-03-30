@@ -125,22 +125,7 @@ flex flex-col justify-between
               {item.label}
             </div>
 
-            <button
-              onClick={() => updateStat(item.field)}
-              className="
-mt-4
-px-4 py-2
-border border-green-600
-text-green-400
-rounded-md
-hover:bg-green-500
-hover:text-black
-transition-all duration-300
-">
 
-              <Plus size={16} />
-
-            </button>
 
           </div>
 
