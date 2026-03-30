@@ -4,7 +4,7 @@ import { useMissions } from "@/lib/useMissions"
 import { supabase } from "@/lib/supabase"
 import { useState } from "react"
 import { useStats } from "@/lib/useStats"
-import { useAuth } from "@/lib/auth-context"
+
 
 
 export function MissionPanel() {
@@ -12,9 +12,7 @@ export function MissionPanel() {
     const missions = useMissions()
     const stats = useStats()
 
-    const { username } = useAuth()
 
-    const isAdmin = username === "TM0days"
 
     const current =
         missions.find(m => m.status === "active")
@@ -201,42 +199,6 @@ export function MissionPanel() {
                         💤 No Active Quest
                     </div>
                 )}
-                {isAdmin ? (
-                    <div className="border border-green-800 p-5 rounded-xl">
-                        <h3 className="text-green-400 mb-4">
-                            ➕ Create New Quest
-                        </h3>
-
-                        <input
-                            placeholder="Quest Title"
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
-                            className="w-full mb-3 p-3 bg-black border border-green-800 text-green-400 rounded-lg"
-                        />
-
-                        <textarea
-                            placeholder="Quest Description"
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            className="w-full mb-3 p-3 bg-black border border-green-800 text-green-400 rounded-lg"
-                        />
-
-                        <input
-                            type="number"
-                            value={xpReward}
-                            onChange={e => setXpReward(Number(e.target.value))}
-                            className="w-full mb-4 p-3 bg-black border border-green-800 text-green-400 rounded-lg"
-                        />
-
-                        <button
-                            onClick={createMission}
-                            disabled={loading}
-                            className="px-5 py-2 border border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition rounded-lg"
-                        >
-                            {loading ? "Creating..." : "Start Quest"}
-                        </button>
-                    </div>
-                ) : null}
                 {/* Quest Log */}
                 {/* Quest Log Toggle */}
                 <div className="mt-12">
