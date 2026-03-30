@@ -65,43 +65,13 @@ export default function BlogPage() {
 
           {regularPosts.map(post => (
 
-            <Link
-              key={post.id}
-              href={`/blog/${post.slug}`}
-              className="
-      block
-      border border-green-500/20  
-      p-4 rounded  
-      cursor-pointer  
-      hover:border-green-400  
-      hover:shadow-[0_0_15px_rgba(0,255,100,0.2)] 
-      transition
-    "
-            >
-
-              <h3 className="text-green-400 font-semibold">
-                {post.title}
-              </h3>
-
-              <p className="text-sm text-gray-400">
-                {post.excerpt}
-              </p>
-
-              <div className="flex gap-4 text-xs mt-2">
-
-                <span className="flex items-center gap-1">
-                  <Calendar size={12} />
-                  {new Date(post.date).toDateString()}
-                </span>
-
-                <span className="flex items-center gap-1">
-                  <Clock size={12} />
-                  {post.read_time}
-                </span>
-
-              </div>
-
-            </Link>
+            <div
+              onClick={() => {
+                console.log("CLICKED", post.slug)
+                window.location.href = `/blog/${post.slug}`
+              }}
+              className="border p-4 rounded cursor-pointer"
+            > </div>
 
           ))}
 
