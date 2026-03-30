@@ -65,9 +65,9 @@ export default function BlogPage() {
 
           {regularPosts.map(post => (
 
-            <Link key={post.id} href={`/blog/${post.slug}`}>
-              <a className="block">
-                <div className="
+
+            <a className="block" key={post.id} href={`/blog/${post.slug}`}>
+              <div className="
                     border border-green-500/20 
                     p-4 rounded 
                     cursor-pointer 
@@ -76,31 +76,30 @@ export default function BlogPage() {
                     transition
                   ">
 
-                  <h3 className="text-green-400 font-semibold">
-                    {post.title}
-                  </h3>
+                <h3 className="text-green-400 font-semibold">
+                  {post.title}
+                </h3>
 
-                  <p className="text-sm text-gray-400">
-                    {post.excerpt}
-                  </p>
+                <p className="text-sm text-gray-400">
+                  {post.excerpt}
+                </p>
 
-                  <div className="flex gap-4 text-xs mt-2">
+                <div className="flex gap-4 text-xs mt-2">
 
-                    <span className="flex items-center gap-1">
-                      <Calendar size={12} />
-                      {new Date(post.date).toDateString()}
-                    </span>
+                  <span className="flex items-center gap-1">
+                    <Calendar size={12} />
+                    {new Date(post.date).toDateString()}
+                  </span>
 
-                    <span className="flex items-center gap-1">
-                      <Clock size={12} />
-                      {post.read_time}
-                    </span>
-
-                  </div>
+                  <span className="flex items-center gap-1">
+                    <Clock size={12} />
+                    {post.read_time}
+                  </span>
 
                 </div>
-              </a>
-            </Link>
+
+              </div>
+            </a>
 
           ))}
 
