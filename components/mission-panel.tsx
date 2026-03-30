@@ -1,4 +1,4 @@
-
+"use client"
 
 import { useMissions } from "@/lib/useMissions"
 import { supabase } from "@/lib/supabase"
