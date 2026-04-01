@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 const VALID_CREDENTIALS = {
   username: "TM0days",
-  password: "admin",
+  password: "848021266929TM",
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
