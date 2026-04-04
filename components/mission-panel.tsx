@@ -4,18 +4,18 @@ import { useMissions } from "@/lib/useMissions"
 import { supabase } from "@/lib/supabase"
 import { useState } from "react"
 import { useStats } from "@/lib/useStats"
-
-
+import { useAuth } from "@/lib/auth-context"
 
 export function MissionPanel() {
 
     const missions = useMissions()
     const stats = useStats()
+    const { isAuthenticated, username } = useAuth()
 
+    const isAdmin = isAuthenticated && username === "TM0days"
 
-
-    const current =
-        missions.find(m => m.status === "active")
+    const activeMissions =
+        missions.filter(m => m.status === "active")
 
     const completed =
         missions.filter(m => m.status === "completed")
@@ -33,17 +33,6 @@ export function MissionPanel() {
         if (!title) return
 
         setLoading(true)
-
-        if (current) {
-            await supabase
-                .from("missions")
-                .update({
-                    status: "completed",
-                    progress: 100,
-                    completed_at: new Date()
-                })
-                .eq("id", current.id)
-        }
 
         await supabase
             .from("missions")
@@ -63,12 +52,11 @@ export function MissionPanel() {
         window.location.reload()
     }
 
-    // 🏆 Complete Mission + Streak + Bonus
-    async function completeMission() {
+    // 🏆 Complete Mission
+    async function completeMission(mission: any) {
 
-        if (!current || !stats) return
+        if (!stats) return
 
-        // 1️⃣ Update mission
         await supabase
             .from("missions")
             .update({
@@ -76,7 +64,7 @@ export function MissionPanel() {
                 progress: 100,
                 completed_at: new Date()
             })
-            .eq("id", current.id)
+            .eq("id", mission.id)
 
         const today = new Date().toISOString().split("T")[0]
 
@@ -93,7 +81,7 @@ export function MissionPanel() {
         }
 
         const totalGain =
-            (current.xp_reward || 0) + bonusXP
+            (mission.xp_reward || 0) + bonusXP
 
         const newXP = stats.xp + totalGain
         const newLevel =
@@ -114,15 +102,8 @@ export function MissionPanel() {
         setTimeout(() => {
             setXpGain(null)
             window.location.reload()
-        }, 2000)
+        }, 1500)
     }
-
-    const difficulty =
-        current?.xp_reward >= 1000
-            ? "🔥 Legendary"
-            : current?.xp_reward >= 500
-                ? "⚡ Hard"
-                : "🟢 Normal"
 
     return (
 
@@ -136,125 +117,136 @@ export function MissionPanel() {
                 </h2>
             </div>
 
-            {/* Centered Container */}
-            <div className="max-w-4xl mx-auto
-                    border border-green-600
-                    rounded-2xl
-                    p-8
-                    bg-black/50
-                    shadow-[0_0_40px_rgba(0,255,0,0.15)]">
+            <div className="max-w-4xl mx-auto border border-green-600 rounded-2xl p-8 bg-black/50">
 
                 {/* 🔥 Streak */}
                 <div className="text-orange-400 text-sm mb-6">
                     🔥 Streak: {stats?.streak || 0} Days
                 </div>
 
-                {/* Active Quest */}
+                {/* Active Missions */}
                 <h3 className="text-green-400 text-lg mb-4">
-                    🎮 Active Quest
+                    🎮 Active Quests
                 </h3>
 
-                {current ? (
+                {activeMissions.length > 0 ? (
 
-                    <div className="border border-green-700
-                        rounded-xl p-5
-                        bg-green-950/20
-                        mb-10">
+                    <div className="space-y-4">
 
-                        <div className="flex justify-between items-center mb-2">
-                            <div className="font-semibold text-green-300">
-                                🗡️ {current.title}
-                            </div>
-
-                            <div className="text-sm text-green-400">
-                                +{current.xp_reward} XP
-                            </div>
-                        </div>
-
-                        <div className="text-gray-400 text-sm mb-3">
-                            {current.description}
-                        </div>
-
-                        <div className="w-full bg-green-900/40 h-2 rounded-full overflow-hidden">
-                            <div
-                                className="bg-green-400 h-2 transition-all duration-500"
-                                style={{ width: `${current.progress}%` }}
-                            />
-                        </div>
-
-                        <button
-                            onClick={completeMission}
-                            className="mt-4 w-full py-2
-                       bg-green-600 text-black
-                       rounded-md hover:bg-green-500 transition">
-
-                            ⚔️ Claim Reward
-
-                        </button>
-
-                    </div>
-
-                ) : (
-                    <div className="text-gray-500 italic mb-10">
-                        💤 No Active Quest
-                    </div>
-                )}
-
-                {/* Quest Log */}
-                {/* Quest Log Toggle */}
-                <div className="mt-12">
-
-                    {/* Header */}
-                    <button
-                        onClick={() => setShowLog(!showLog)}
-                        className="w-full flex justify-between items-center
-               border border-green-800
-               rounded-lg p-3
-               hover:border-green-500
-               transition">
-
-                        <span className="text-green-400 font-medium">
-                            📜 Quest Log
-                        </span>
-
-                        <span className="text-green-400 text-sm">
-                            {showLog ? "▲ Hide" : "▼ Show"}
-                        </span>
-
-                    </button>
-
-                    {/* Animated Content */}
-                    <div
-                        className={`
-      transition-all duration-500 overflow-hidden
-      ${showLog ? "max-h-[800px] opacity-100 mt-4" : "max-h-0 opacity-0"}
-    `}
-                    >
-
-                        {completed.map(m => (
+                        {activeMissions.map(m => (
 
                             <div
                                 key={m.id}
-                                className="border border-green-800
-                   bg-black/40
-                   rounded-lg p-3 mb-3
-                   flex justify-between items-center
-                   hover:border-green-500
-                   transition">
+                                className="border border-green-700 rounded-xl p-5 bg-green-950/20"
+                            >
 
-                                <div className="text-green-400 text-sm">
-                                    🏆 {m.title}
+                                <div className="flex justify-between mb-2">
+
+                                    <div className="text-green-300 font-semibold">
+                                        🗡️ {m.title}
+                                    </div>
+
+                                    <div className="text-green-400 text-sm">
+                                        +{m.xp_reward} XP
+                                    </div>
+
                                 </div>
 
-                                <div className="text-xs text-green-500">
-                                    +{m.xp_reward} XP
+                                <div className="text-gray-400 text-sm mb-3">
+                                    {m.description}
                                 </div>
+
+                                <div className="w-full bg-green-900/40 h-2 rounded">
+                                    <div
+                                        className="bg-green-400 h-2"
+                                        style={{ width: `${m.progress}%` }}
+                                    />
+                                </div>
+
+                                {isAdmin && (
+                                    <button
+                                        onClick={() => completeMission(m)}
+                                        className="mt-4 w-full py-2 bg-green-600 text-black rounded-md"
+                                    >
+                                        ⚔️ Claim Reward
+                                    </button>
+                                )}
 
                             </div>
 
                         ))}
 
                     </div>
+
+                ) : (
+                    <div className="text-gray-500">
+                        No active quests
+                    </div>
+                )}
+
+                {/* ➕ Create Mission */}
+                {isAdmin && (
+                    <div className="mt-10">
+
+                        <h3 className="text-green-400 mb-4">
+                            ➕ Create Quest
+                        </h3>
+
+                        <input
+                            placeholder="Title"
+                            value={title}
+                            onChange={e => setTitle(e.target.value)}
+                            className="w-full mb-3 p-2 bg-black border border-green-700 rounded"
+                        />
+
+                        <textarea
+                            placeholder="Description"
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
+                            className="w-full mb-3 p-2 bg-black border border-green-700 rounded"
+                        />
+
+                        <input
+                            type="number"
+                            value={xpReward}
+                            onChange={e => setXpReward(Number(e.target.value))}
+                            className="w-full mb-3 p-2 bg-black border border-green-700 rounded"
+                        />
+
+                        <button
+                            onClick={createMission}
+                            className="px-4 py-2 border border-green-500 text-green-400 rounded"
+                        >
+                            Start Quest
+                        </button>
+
+                    </div>
+                )}
+
+                {/* 📜 Quest Log */}
+                <div className="mt-10">
+
+                    <button
+                        onClick={() => setShowLog(!showLog)}
+                        className="w-full border border-green-800 p-3 rounded"
+                    >
+                        📜 Quest Log {showLog ? "▲" : "▼"}
+                    </button>
+
+                    {showLog && (
+                        <div className="mt-4 space-y-2">
+
+                            {completed.map(m => (
+                                <div
+                                    key={m.id}
+                                    className="border border-green-800 p-3 rounded"
+                                >
+                                    🏆 {m.title} (+{m.xp_reward} XP)
+                                </div>
+                            ))}
+
+                        </div>
+                    )}
 
                 </div>
 
